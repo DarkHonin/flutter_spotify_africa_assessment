@@ -1,9 +1,12 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_spotify_africa_assessment/features/spotify/api/Artist.dart';
 
 import 'package:flutter_spotify_africa_assessment/features/spotify/api/Playlist.dart';
 import 'package:flutter_spotify_africa_assessment/features/spotify/api/Track.dart';
+import 'package:flutter_spotify_africa_assessment/features/spotify/components/TrackList.dart';
 import 'package:flutter_spotify_africa_assessment/features/spotify/components/TrackSearchBar.dart';
 import 'package:flutter_spotify_africa_assessment/colors.dart';
 import 'dart:math';
@@ -40,22 +43,21 @@ class SpotifyPlaylist extends StatelessWidget {
     ThemeData theme = Theme.of(context);
 
     int duration = 0;
-    List<TrackArtist> artists = [];
-    List<ListTile> tracks = playlist.tracks.map((e) {
-      duration += e.duration;
-      bool has = false;
-      for (TrackArtist a in artists) if (a.id == e.artists.first.id) has = true;
+    Map<String, num> artists = Map<String, int>();
 
-      if (!has) artists.add(e.artists.first);
-      return ListTile(
-          leading: Image(image: NetworkImage(e.albumArt.url)),
-          title:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(e.name),
-            Text(e.artists.first.name, style: theme.textTheme.subtitle2),
-            Text(e.durationString(), style: durationStyle)
-          ]));
+    // Tally duration and tracks a spesific artist features in
+    playlist.tracks.map((e) {
+      duration += e.duration;
+      for (TrackArtist artistTrack in e.artists) {
+        if (!artists.containsKey(artistTrack.id)) artists[artistTrack.id] = 1;
+        artists[artistTrack.id] = artists[artistTrack.id]! + 1;
+      }
+      ;
     }).toList();
+
+    // Sort artist Ids based on feature count
+    final sorted = new SplayTreeMap<String, num>.from(
+        artists, (a, b) => artists[a]! > artists[b]! ? -1 : 1);
 
     return Scaffold(
       appBar: AppBar(),
@@ -63,9 +65,7 @@ class SpotifyPlaylist extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TrackSearchBar(onSearch: (v) {
-              print(v);
-            }),
+            TrackSearchBar(),
             Expanded(
                 child: SingleChildScrollView(
               child: Column(
@@ -94,16 +94,17 @@ class SpotifyPlaylist extends StatelessWidget {
                       )
                     ],
                   ),
-                  ...tracks.sublist(0, 3),
+                  TrackList(tracks: playlist.tracks),
                   Text("Artists in this playlist:",
                       style: theme.textTheme.headline6),
                   SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
-                        children: artists
-                            .map((e) => FutureBuilder(
-                                future: SpotifyApiClient.getArtist(e.id),
+                        children: sorted.keys
+                            .map((id) => FutureBuilder(
+                                future: SpotifyApiClient.getArtist(id),
                                 builder: (c, snapC) {
+                                  if (snapC.hasError) return Container();
                                   if (!snapC.hasData)
                                     return CircularProgressIndicator();
                                   Artist artist = snapC.data as Artist;

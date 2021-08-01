@@ -31,12 +31,12 @@ class PlaylistGridTile extends StatelessWidget {
                       fit: BoxFit.fitHeight,
                       image: NetworkImage(playlist.images.first.url),
                     ),
-                    Container(
-                        padding: EdgeInsets.all(4),
+                    Center(
+                        // padding: EdgeInsets.all(4),
                         child: Text(
-                          playlist.name,
-                          style: theme.textTheme.headline6,
-                        )),
+                      playlist.name,
+                      style: theme.textTheme.headline6,
+                    )),
                     Padding(
                         padding: EdgeInsets.all(4),
                         child: FittedBox(

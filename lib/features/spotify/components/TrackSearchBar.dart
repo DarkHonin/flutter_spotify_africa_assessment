@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TrackSearchBar extends StatelessWidget {
-  final Function(String) onSearch;
-  const TrackSearchBar({Key? key, required this.onSearch}) : super(key: key);
+  static ValueNotifier<String> SearchTerm = ValueNotifier("");
+  const TrackSearchBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class TrackSearchBar extends StatelessWidget {
                 ),
                 Expanded(
                   child: TextField(
-                    onChanged: (v) => onSearch(v),
+                    onChanged: (v) => SearchTerm.value = v,
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Find tracks in playlist",
