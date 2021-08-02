@@ -7,7 +7,7 @@ class TrackSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 8),
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 6),
         child: Container(
             padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
             decoration: BoxDecoration(

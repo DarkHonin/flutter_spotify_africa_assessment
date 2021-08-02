@@ -60,9 +60,12 @@ class SpotifyCategory extends StatelessWidget {
                     Center(
                         child: Column(
                       children: [
-                        Text(
-                          c.name,
-                          style: theme.textTheme.headline3,
+                        Padding(
+                          padding: EdgeInsets.all(32),
+                          child: Text(
+                            c.name,
+                            style: theme.textTheme.headline3,
+                          ),
                         ),
                         Padding(
                           padding: EdgeInsets.all(12),

@@ -40,6 +40,7 @@ class SpotifyPlaylist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle durationStyle = TextStyle(color: AppColors.green);
+    TextStyle descriptionStyle = TextStyle(fontSize: 12);
     ThemeData theme = Theme.of(context);
 
     int duration = 0;
@@ -71,23 +72,29 @@ class SpotifyPlaylist extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                      child: SizedBox(
-                          width: 400,
-                          height: 400,
-                          child: Image(
-                            image: NetworkImage(playlist.images.first.url),
-                          ))),
+                  Container(
+                    padding: EdgeInsets.all(14),
+                    child: Center(
+                        child: SizedBox(
+                            width: 265,
+                            height: 265,
+                            child: Image(
+                              image: NetworkImage(playlist.images.first.url),
+                            ))),
+                  ),
                   Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text(_parseText(playlist.description)),
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: Text(
+                      _parseText(playlist.description),
+                      style: descriptionStyle,
+                    ),
                   ),
                   Row(
                     children: [
                       Text(playlist.followers.toString().replaceAllMapped(
                               new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                               (Match m) => '${m[1]},') +
-                          " likes"),
+                          " likes "),
                       Text(
                         _parseTime(duration),
                         style: durationStyle,
@@ -117,8 +124,8 @@ class SpotifyPlaylist extends StatelessWidget {
                                                 foregroundImage: NetworkImage(
                                                     artist.icon.url),
                                               ),
-                                              width: 200,
-                                              height: 200),
+                                              width: 130,
+                                              height: 130),
                                           Text(artist.name),
                                         ],
                                       ));

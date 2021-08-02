@@ -15,7 +15,8 @@ class _TrackListState extends State<TrackList> {
   @override
   Widget build(BuildContext context) {
     TextStyle durationStyle = TextStyle(color: AppColors.green);
-    ThemeData theme = Theme.of(context);
+    TextStyle titleStyle = TextStyle(fontSize: 14);
+    TextStyle artistStyle = TextStyle(fontSize: 12);
     return Container(
         child: ValueListenableBuilder(
       valueListenable: TrackSearchBar.SearchTerm,
@@ -27,28 +28,51 @@ class _TrackListState extends State<TrackList> {
                     (e) => e.name.toLowerCase().startsWith(term.toLowerCase()))
                 .toList();
 
-        return Column(children: [
-          ...finalView.isEmpty
-              ? ([
-                  Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      child: Center(child: Text('No tracks found for ${term}')))
-                ])
-              : finalView.map((e) {
-                  String artists =
-                      e.artists.map((a) => a.name).toList().join(', ');
+        return Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Column(children: [
+              ...finalView.isEmpty
+                  ? ([
+                      Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          child: Center(
+                              child: Text('No tracks found for ${term}')))
+                    ])
+                  : finalView.map((e) {
+                      String artists =
+                          e.artists.map((a) => a.name).toList().join(', ');
 
-                  return ListTile(
-                      leading: Image(image: NetworkImage(e.albumArt.url)),
-                      title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      return Container(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Row(
                           children: [
-                            Text(e.name),
-                            Text(artists, style: theme.textTheme.subtitle2),
-                            Text(e.durationString(), style: durationStyle)
-                          ]));
-                }).toList(),
-        ]);
+                            Image(
+                                width: 64,
+                                height: 64,
+                                image: NetworkImage(e.albumArt.url)),
+                            Container(
+                                padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                                height: 64,
+                                child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(e.name, style: titleStyle),
+                                      Text(
+                                        artists,
+                                        style: artistStyle,
+                                        overflow: TextOverflow.clip,
+                                      ),
+                                      Text(e.durationString(),
+                                          style: durationStyle)
+                                    ]))
+                          ],
+                        ),
+                      );
+                    }).toList(),
+            ]));
       },
     ));
   }

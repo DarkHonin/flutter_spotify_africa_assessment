@@ -33,6 +33,6 @@ class Track {
     min = ((duration / 1000) / 60).floor();
     sec = ((duration / 1000) - (min * 60)).floor();
 
-    return "${min}:${sec}";
+    return "${min}:${sec < 10 ? '0' + sec.toString() : sec}";
   }
 }

@@ -11,7 +11,10 @@ class PlaylistGridTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
+    TextStyle tileNameStyle =
+        TextStyle(fontWeight: FontWeight.bold, fontFamily: "Roboto");
+    TextStyle tileFollowersStyle =
+        TextStyle(fontWeight: FontWeight.w100, fontFamily: "Roboto");
 
     return FutureBuilder(
         future: SpotifyApiClient.getPlaylist(categoryId, playlistId),
@@ -24,31 +27,32 @@ class PlaylistGridTile extends StatelessWidget {
                   arguments: playlist),
               child: Container(
                 width: (MediaQuery.of(c).size.width - 40) / 2,
-                padding: EdgeInsets.all(12),
+                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 child: Column(
                   children: [
                     Image(
                       fit: BoxFit.fitHeight,
                       image: NetworkImage(playlist.images.first.url),
                     ),
-                    Center(
-                        // padding: EdgeInsets.all(4),
-                        child: Text(
-                      playlist.name,
-                      style: theme.textTheme.headline6,
-                    )),
                     Padding(
-                        padding: EdgeInsets.all(4),
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
+                      padding: EdgeInsets.symmetric(vertical: 8),
+                      child: Center(
+                          // padding: EdgeInsets.all(4),
                           child: Text(
-                            playlist.followers.toString().replaceAllMapped(
-                                    new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                    (Match m) => '${m[1]},') +
-                                " FOLLOWERS",
-                            style: theme.textTheme.subtitle1,
-                          ),
-                        ))
+                        playlist.name,
+                        style: tileNameStyle,
+                      )),
+                    ),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        playlist.followers.toString().replaceAllMapped(
+                                new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                (Match m) => '${m[1]},') +
+                            " FOLLOWERS",
+                        style: tileFollowersStyle,
+                      ),
+                    )
                   ],
                 ),
               ));

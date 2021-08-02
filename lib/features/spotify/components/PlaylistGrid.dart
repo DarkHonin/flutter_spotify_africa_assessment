@@ -23,7 +23,7 @@ class _PlaylistGridState extends State<PlaylistGrid> {
         widget.categoryId,
         offset: page * limit,
         limit: limit);
-    ThemeData theme = Theme.of(context);
+
     return FutureBuilder(
         future: playlists,
         builder: (c, snap) {
